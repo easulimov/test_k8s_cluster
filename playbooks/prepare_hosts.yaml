@@ -1,0 +1,56 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+
+    - name: "Update /etc/hosts"
+      ansible.builtin.blockinfile:
+        dest: /etc/hosts
+        block: |
+          {% for host in groups['all'] %}
+          {{ hostvars[host].ansible_host }} {{ hostvars[host].inventory_hostname_short }} {{ hostvars[host].inventory_hostname }}
+          {% endfor %}
+        state: present
+        create: true
+        backup: true
+        marker: "# Ansible inventory hosts {mark}"
+
+    - name: "Install packages"
+      ansible.builtin.apt:
+        name:
+          - curl
+          - wget
+          - gnupg
+          - sudo
+          - iptables
+          - ncat
+          - mc
+          - inetutils-tools
+          - inetutils-traceroute
+          - htop
+          - jq
+          - git
+          - apt-transport-https
+          - ca-certificates
+          - gpg
+        state: present
+        update_cache: true
+      when: inventory_hostname in groups['all']
+
+    - name: "Install haproxy"
+      ansible.builtin.apt:
+        name:
+          - haproxy
+        state: present
+        update_cache: true
+      when: inventory_hostname in groups['etcd']
+
+    - name: "Disable SWAP command"
+      ansible.builtin.command: |
+        swapoff -a
+
+    - name: "Disable swap in /etc/fstab"
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
