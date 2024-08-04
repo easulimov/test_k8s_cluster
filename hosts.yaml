@@ -1,36 +1,34 @@
 ---
 all:
   children:
-    etcd:
-      hosts:
-        etcd-lb-01.sea.local:
-          ansible_host: 192.168.8.61
-          ansible_port: 22
-        etcd-lb-02.sea.local:
-          ansible_host: 192.168.8.62
-          ansible_port: 22
-        etcd-lb-03.sea.local: 
-          ansible_host: 192.168.8.63
-          ansible_port: 22
     masters:
       hosts:
         master-01.sea.local:
-          ansible_host: 192.168.8.64
+          ansible_host: 192.168.8.61
           ansible_port: 22
         master-02.sea.local:
-          ansible_host: 192.168.8.65
+          ansible_host: 192.168.8.62
           ansible_port: 22
         master-03.sea.local: 
-          ansible_host: 192.168.8.66
+          ansible_host: 192.168.8.63
           ansible_port: 22
     workers:
       hosts:
         worker-01.sea.local:
-          ansible_host: 192.168.8.67
+          ansible_host: 192.168.8.64
           ansible_port: 22
         worker-02.sea.local:
-          ansible_host: 192.168.8.68
+          ansible_host: 192.168.8.65
           ansible_port: 22
         worker-03.sea.local: 
+          ansible_host: 192.168.8.66
+          ansible_port: 22
+        worker-04.sea.local:
+          ansible_host: 192.168.8.67
+          ansible_port: 22
+        worker-05.sea.local:
+          ansible_host: 192.168.8.68
+          ansible_port: 22
+        worker-06.sea.local: 
           ansible_host: 192.168.8.69
           ansible_port: 22

@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: ./files/k8s-setup-kube-tools.sh
+        dest: /root/
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Run k8s-setup-kube-tools.sh
+      ansible.builtin.shell: /root/k8s-setup-kube-tools.sh

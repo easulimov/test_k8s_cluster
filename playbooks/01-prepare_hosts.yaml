@@ -1,6 +1,7 @@
 ---
-- hosts: all
-  become: yes
+- name: "Prepare hosts"
+  hosts: all
+  become: true
   tasks:
 
     - name: "Update /etc/hosts"
@@ -33,6 +34,12 @@
           - apt-transport-https
           - ca-certificates
           - gpg
+          - tcpdump
+          - coreutils
+          - tar
+          - ebtables
+          - netbase
+          - conntrack
         state: present
         update_cache: true
       when: inventory_hostname in groups['all']
@@ -41,9 +48,10 @@
       ansible.builtin.apt:
         name:
           - haproxy
+          - keepalived
         state: present
         update_cache: true
-      when: inventory_hostname in groups['etcd']
+      when: inventory_hostname in groups['masters']
 
     - name: "Disable SWAP command"
       ansible.builtin.command: |
