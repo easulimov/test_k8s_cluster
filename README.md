@@ -89,3 +89,48 @@ export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/calico.yaml
 ```
+
+
+### Установка MetalLB
+
+На мастер ноде примените команду
+
+```
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
+```
+
+Далее, необходимо определить IP Pool. Для этого необходиом применить манифест:
+
+```yaml
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: default-metallb-ip-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.8.40-192.168.8.45
+  autoAssign: true
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: default-metallb-l2-advertisement
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - default-metallb-ip-pool
+
+```
+
+
+```
+kubectl apply -f ./manifests/metallb/ip_pool.yaml
+```
+
+В качестве теста можно установить nginx
+
+```
+kubectl apply -f ./manifests/metallb/nginx_test.yaml 
+```
